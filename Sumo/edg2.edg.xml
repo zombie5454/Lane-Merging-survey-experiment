@@ -1,0 +1,18 @@
+<edges>
+
+	<!--> use two edges<-->    
+	<edge id="E-1_A" from="N-pre" to="N-start" shape='-50,+1.60 0,+1.60' speed='100'/>
+	<edge id="E-1_B" from="N-pre" to="N-start" shape='-50,-1.60 0,-1.60' speed='100'/>
+	<edge id="E0_A" from="N-start" to="N-laneChange" shape='0.00,+1.60 250,+1.60' speed='100'/>
+	<edge id="E0_B" from="N-start" to="N-laneChange" shape='0.00,-1.60 250,-1.60' speed='100'/>
+	<edge id='E1_A' from='N-laneChange' to='N-m-point' shape='250,+1.60 500,+1.60' speed='100'/>
+	<edge id='E1_B' from='N-laneChange' to='N-m-point' shape='250,-1.60 500,-1.60' speed='100'/>
+	
+	<!--> use one edge with two lanes<-->
+	<!-->
+	<edge id="E0" 		from="N-start" 		to="N-m-point" numLanes='2'/>
+	<-->
+	
+	<edge id="E2"		from="N-m-point"	to="N-end" speed='100'/>
+
+</edges>

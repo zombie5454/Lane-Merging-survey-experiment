@@ -1,0 +1,15 @@
+<nodes>
+	<node id='N-pre'		x='-50' y='0'/>
+	<node id='N-start'   	x='0' 	y='0'/>
+	<!-->
+	<node id='N1'   	x='100' 	y='0'/>
+	<node id='N2'   	x='200' 	y='0'/>
+	<node id='N3'   	x='300' 	y='0'/>
+	<node id='N4'   	x='400' 	y='0'/>
+	<-->
+	<node id='N-laneChange' x='250'  y='0'/>
+	<node id='N-m-point' 	x='500'  y='0'/>
+	<node id='N-end' 		x='1000' y='0'/>
+</nodes>
+
+

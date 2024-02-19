@@ -1,0 +1,8 @@
+<configuration>
+	<input>
+        <net-file value="net2.net.xml"/>
+        <route-files value="rou3.rou.xml"/>
+        <additional-files value='det.add.xml'/>
+    </input>
+
+</configuration>

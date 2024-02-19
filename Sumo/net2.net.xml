@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-->此為netconvert.exe產生的，不要自己寫<-->
+<!-->request中的cont參數需要自己改成1(目前找不到其他方法)，
+        cont為0會強制讓priority較低的車子在到達交岔路口前先停下來(不論另一車道有沒有車)，
+        cont為1則不會，因此有可能發生collision，但這次實驗需要cont為1結果才會準確<-->
+
+<!-- generated on 2023-03-30 14:35:17 by Eclipse SUMO netconvert Version 1.16.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <node-files value="nod2.nod.xml"/>
+        <edge-files value="edg2.edg.xml"/>
+        <connection-files value="c2.con.xml"/>
+    </input>
+
+    <output>
+        <output-file value="net2.net.xml"/>
+    </output>
+
+</configuration>
+-->
+
+<net version="1.16" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <location netOffset="50.00,1.60" convBoundary="0.00,0.00,1050.00,3.20" origBoundary="-50.00,-1.60,1000.00,1.60" projParameter="!"/>
+
+    <edge id=":N-laneChange_0" function="internal">
+        <lane id=":N-laneChange_0_0" index="0" speed="100.00" length="3.00" shape="298.50,1.60 301.50,1.60"/>
+    </edge>
+    <edge id=":N-laneChange_1" function="internal">
+        <lane id=":N-laneChange_1_0" index="0" speed="100.00" length="3.00" shape="298.50,-1.60 301.50,-1.60"/>
+    </edge>
+    <edge id=":N-laneChange_2" function="internal">
+        <lane id=":N-laneChange_2_0" index="0" speed="100.00" length="4.39" shape="298.50,-1.60 301.50,1.60"/>
+    </edge>
+    <edge id=":N-m-point_0" function="internal">
+        <lane id=":N-m-point_0_0" index="0" speed="100.00" length="3.52" shape="548.50,1.60 549.45,1.35 550.00,0.80 550.55,0.25 551.50,0.00"/>
+    </edge>
+    <edge id=":N-m-point_1" function="internal">
+        <lane id=":N-m-point_1_0" index="0" speed="100.00" length="3.52" shape="548.50,-1.60 549.45,-1.35 550.00,-0.80 550.55,-0.25 551.50,0.00"/>
+    </edge>
+    <edge id=":N-start_0" function="internal">
+        <lane id=":N-start_0_0" index="0" speed="100.00" length="3.00" shape="48.50,1.60 51.50,1.60"/>
+    </edge>
+    <edge id=":N-start_1" function="internal">
+        <lane id=":N-start_1_0" index="0" speed="100.00" length="3.00" shape="48.50,-1.60 51.50,-1.60"/>
+    </edge>
+
+    <edge id="E-1_A" from="N-pre" to="N-start" priority="-1" shape="0.00,3.20 50.00,3.20">
+        <lane id="E-1_A_0" index="0" speed="100.00" length="48.50" shape="0.00,1.60 48.50,1.60"/>
+    </edge>
+    <edge id="E-1_B" from="N-pre" to="N-start" priority="-1" shape="0.00,0.00 50.00,0.00">
+        <lane id="E-1_B_0" index="0" speed="100.00" length="48.50" shape="0.00,-1.60 48.50,-1.60"/>
+    </edge>
+    <edge id="E0_A" from="N-start" to="N-laneChange" priority="-1" shape="50.00,3.20 300.00,3.20">
+        <lane id="E0_A_0" index="0" speed="100.00" length="247.00" shape="51.50,1.60 298.50,1.60"/>
+    </edge>
+    <edge id="E0_B" from="N-start" to="N-laneChange" priority="-1" shape="50.00,0.00 300.00,0.00">
+        <lane id="E0_B_0" index="0" speed="100.00" length="247.00" shape="51.50,-1.60 298.50,-1.60"/>
+    </edge>
+    <edge id="E1_A" from="N-laneChange" to="N-m-point" priority="-1" shape="300.00,3.20 550.00,3.20">
+        <lane id="E1_A_0" index="0" speed="100.00" length="247.00" shape="301.50,1.60 548.50,1.60"/>
+    </edge>
+    <edge id="E1_B" from="N-laneChange" to="N-m-point" priority="-1" shape="300.00,0.00 550.00,0.00">
+        <lane id="E1_B_0" index="0" speed="100.00" length="247.00" shape="301.50,-1.60 548.50,-1.60"/>
+    </edge>
+    <edge id="E2" from="N-m-point" to="N-end" priority="-1">
+        <lane id="E2_0" index="0" speed="100.00" length="498.50" shape="551.50,0.00 1050.00,0.00"/>
+    </edge>
+
+    <junction id="N-end" type="dead_end" x="1050.00" y="1.60" incLanes="E2_0" intLanes="" shape="1050.00,-1.60 1050.00,1.60"/>
+    <junction id="N-laneChange" type="priority" x="300.00" y="1.60" incLanes="E0_A_0 E0_B_0" intLanes=":N-laneChange_0_0 :N-laneChange_1_0 :N-laneChange_2_0" shape="301.50,3.20 301.50,-3.20 298.50,-3.20 298.50,3.20">
+        <request index="0" response="100" foes="100" cont="1"/>
+        <request index="1" response="000" foes="000" cont="1"/>
+        <request index="2" response="000" foes="001" cont="1"/>
+    </junction>
+    <junction id="N-m-point" type="priority" x="550.00" y="1.60" incLanes="E1_A_0 E1_B_0" intLanes=":N-m-point_0_0 :N-m-point_1_0" shape="551.50,1.60 551.50,-1.60 550.34,-2.01 549.66,-2.79 549.19,-3.08 548.50,-3.20 548.50,3.20 549.66,2.79 550.34,2.01 550.81,1.72">
+        <request index="0" response="10" foes="10" cont="1"/>
+        <request index="1" response="00" foes="01" cont="1"/>
+    </junction>
+    <junction id="N-pre" type="dead_end" x="0.00" y="1.60" incLanes="" intLanes="" shape="0.00,3.20 0.00,0.00 0.00,-3.20"/>
+    <junction id="N-start" type="priority" x="50.00" y="1.60" incLanes="E-1_A_0 E-1_B_0" intLanes=":N-start_0_0 :N-start_1_0" shape="51.50,3.20 51.50,-3.20 48.50,-3.20 48.50,3.20">
+        <request index="0" response="00" foes="00" cont="1"/>
+        <request index="1" response="00" foes="00" cont="1"/>
+    </junction>
+
+    <connection from="E-1_A" to="E0_A" fromLane="0" toLane="0" via=":N-start_0_0" dir="s" state="M"/>
+    <connection from="E-1_B" to="E0_B" fromLane="0" toLane="0" via=":N-start_1_0" dir="s" state="M"/>
+    <connection from="E0_A" to="E1_A" fromLane="0" toLane="0" via=":N-laneChange_0_0" dir="s" state="m"/>
+    <connection from="E0_B" to="E1_B" fromLane="0" toLane="0" via=":N-laneChange_1_0" dir="s" state="M"/>
+    <connection from="E0_B" to="E1_A" fromLane="0" toLane="0" via=":N-laneChange_2_0" dir="s" state="M"/>
+    <connection from="E1_A" to="E2" fromLane="0" toLane="0" via=":N-m-point_0_0" dir="s" state="m"/>
+    <connection from="E1_B" to="E2" fromLane="0" toLane="0" via=":N-m-point_1_0" dir="s" state="M"/>
+
+    <connection from=":N-laneChange_0" to="E1_A" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":N-laneChange_1" to="E1_B" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":N-laneChange_2" to="E1_A" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":N-m-point_0" to="E2" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":N-m-point_1" to="E2" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":N-start_0" to="E0_A" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":N-start_1" to="E0_B" fromLane="0" toLane="0" dir="s" state="M"/>
+
+</net>

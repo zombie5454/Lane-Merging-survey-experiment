@@ -1,0 +1,6 @@
+<!-->inductionLoop可以放置在路上某個位置，透過traci查詢該位置的資訊<-->
+<additional>
+	<inductionLoop id="detB" lane="E0_B_0" pos="150" file='outB.xml'/>
+	<inductionLoop id="detA" lane="E0_A_0" pos="150" file='outA.xml'/>
+	<!--><inductionLoop id="detA_0" lane="E0_A_0" pos="60" file='outA.xml' length='90'/><-->
+</additional>

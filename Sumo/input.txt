@@ -1,0 +1,8 @@
+[9, 13, 20, 26]
+[7, 10, 16, 19]
+['A3', 'A2', 'A1', 'A0', 'B2', 'B1']
+['A3', 'A2', 'B3', 'A1', 'B0', 'A0', 'B2', 'B1']
+# depart timeA
+# depart timeB
+# laneA_after_change
+# passing_order
