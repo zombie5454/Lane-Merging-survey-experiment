@@ -5,7 +5,7 @@ import sys
 
 s = scenario()
 s.set_printSteps() 					# print出simulation所花的step數
-
+#s.set_gui()                         # 顯示GUI
 
 ### argument可以用argv的方式傳，也可以直接修改程式碼 ###
 s.run(arg=sys.argv)					
