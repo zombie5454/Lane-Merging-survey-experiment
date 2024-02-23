@@ -7,17 +7,19 @@ from function.laneChange import randomLaneChange, noLaneChange, allLaneChange, n
 from function.passingOrder import randomPassingOrder, FIFO
 from function.action import lane_merge, change_lane_order, slow_down
 
-# 這支程式是用來跑simulation
-# 如何使用這個程式:
-# 	1. 如果要跑一次simulation，記得把,最後一行的run()給他uncommemt掉
-#   2. 基本上跑python3 run3.py就能跑了
-#	3. 如果要看simulation的過程，可以將441行的start_arg = ["sumo", "-c", "cfg.sumocfg"]中的"sumo"改成"sumo-gui"
-#   4. python3 run3.py後可以加--c {lane-changing algorithm name: no(default), all, nowaiting, random} 
-#	5. python3 run3.py後可以加--m {lane-merging algorithm name: fifo(default), random}
-#	6. 注意 --c random 只能跟 --m random 一起用，因為prediction model不完善 
-#   7. python3 run3.py後可以加new表示跑新的data(default不會生新data)，加last表示跑上次的simulation
-#	8. 上次simulation的input的資料會寫進input.txt
-#	9. 如果要print整個simulation所花費的step數，可以uncomment第627行(print(f'simulation end, it takes {step} steps'))
+### scenario是用來模擬整體架構的class，其中的run()可以用來跑一次simulation ###
+
+# 1.可以透過set_gui()來讓simulation的過程呈現在內建的GUI上
+# 2.可以透過set_numA()和set_numB()來決定A, B車道上的車輛數
+# 3.可以透過set_printSteps()來讓print出simulation所花的step數
+# 4.在跑run()時，傳入的參數arg: List，請注意arg[0]是不會讀取到的，所以建議是用sys.argv傳入
+# 5.arg的option有: 
+#		--c [lane-changing演算法]，lane-changing演算法有: no(default), all, nowaiting, random
+#		--m [lane-merging演算法],  lane-merging演算法有: fifo(default), random
+#		--step-length [n] or --sl [n], 數字介於[0.001 and 1.0]，表示一個step代表實際幾秒, default: 0.1
+# 		new, 代表需要新的data
+# 6.重要的varibale的初始值和default值都在__inin__()裡
+# 7.input.txt會儲存上一次跑的simulation的input值
 
 '''
 import os, sys
@@ -39,7 +41,7 @@ class scenario:
 		self.lane_change_alg = 'No'
 		self.lane_merge_alg = 'FIFO'
 		self.new_data = False
-
+		self.printSteps = False
 
 
 		# variable
@@ -55,6 +57,12 @@ class scenario:
 		self.numB = 4
 
 
+	#### setter ####
+	def set_printSteps(self):
+		self.printSteps = True
+
+	def unset_printSteps(self):
+		self.printSteps = False	
 
 	def set_gui(self):
 		self.start_arg[0] = "sumo-gui"
@@ -76,7 +84,7 @@ class scenario:
 
 
 
-	def run(self, arg = sys.argv):	
+	def run(self, arg):	
 	
 		#### option, argv ####
 		step_length = self.step_length	# sumo/sumo-gui use a time step of one second per default. You may override this using the --step-length <TIME> option. <TIME> is by giving a value in seconds between [0.001 and 1.0].
@@ -263,8 +271,8 @@ class scenario:
 			last_laneA_c = laneA_c
 			last_laneB_c = laneB_c
 
-
-		#print(f'simulation end, it takes {step} steps')
+		if self.printSteps:
+			print(f'simulation end, it takes {step} steps')
 		traci.close()
 		return step
 
