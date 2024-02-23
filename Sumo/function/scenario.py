@@ -18,8 +18,8 @@ from function.action import lane_merge, change_lane_order, slow_down
 #		--m [lane-merging演算法],  lane-merging演算法有: fifo(default), random
 #		--step-length [n] or --sl [n], 數字介於[0.001 and 1.0]，表示一個step代表實際幾秒, default: 0.1
 # 		new, 代表需要新的data
-# 6.重要的varibale的初始值和default值都在__inin__()裡
-# 7.input.txt會儲存上一次跑的simulation的input值
+# 6.重要的varibale的初始值和default值都在__init__()裡
+# 7.input.txt會儲存上一次跑的simulation的input
 
 '''
 import os, sys
@@ -36,7 +36,7 @@ sys.path.append(os.path.join('c:', os.sep, 'whatever', 'path', 'to', 'sumo', 'to
 class scenario:
 	def __init__(self):
 		# option, argv
-		self.step_length = 0.1	# sumo/sumo-gui use a time step of one second per default. You may override this using the --step-length <TIME> option. <TIME> is by giving a value in seconds between [0.001 and 1.0].
+		self.step_length = 0.1		# sumo/sumo-gui use a time step of one second per default. You may override this using the --step-length <TIME> option. <TIME> is by giving a value in seconds between [0.001 and 1.0].
 		self.start_arg = ["sumo", "-c", "cfg.sumocfg"] 
 		self.lane_change_alg = 'No'
 		self.lane_merge_alg = 'FIFO'
@@ -46,7 +46,7 @@ class scenario:
 
 		# variable
 		self.lane_change_point = 250
-		self.normal_speed = 14  # 14 m/s = 50.4 km/hr
+		self.normal_speed = 14  	# 14 m/s = 50.4 km/hr
 		self.safe_dis = self.normal_speed * 2
 		self.slow_speed = self.normal_speed * 0.6
 		self.step_error = self.normal_speed * self.step_length
@@ -55,6 +55,7 @@ class scenario:
 		self.W_plus = self.normal_speed * 3
 		self.numA = 4
 		self.numB = 4
+
 
 
 	#### setter ####
@@ -87,13 +88,12 @@ class scenario:
 	def run(self, arg):	
 	
 		#### option, argv ####
-		step_length = self.step_length	# sumo/sumo-gui use a time step of one second per default. You may override this using the --step-length <TIME> option. <TIME> is by giving a value in seconds between [0.001 and 1.0].
+		step_length = self.step_length		# sumo/sumo-gui use a time step of one second per default. You may override this using the --step-length <TIME> option. <TIME> is by giving a value in seconds between [0.001 and 1.0].
 		start_arg = self.start_arg.copy()
 		lane_change_alg = self.lane_change_alg
 		lane_merge_alg = self.lane_merge_alg
 		new_data = self.new_data
 		for i in range(1, len(arg)):
-			#print(arg[i])
 			if arg[i] == '--step-length' or arg[i] == '--sl':
 				step_length = arg[i+1]
 			if arg[i] == '--c':
@@ -107,6 +107,7 @@ class scenario:
 		start_arg.append(str(step_length))
 		start_arg.append('--no-step-log')
 	
+
 	
 		departTimeA = []
 		departTimeB = []
@@ -117,7 +118,6 @@ class scenario:
 			f = open('input.txt', 'r')
 			inputs = f.readlines()
 			f.close()
-			#print(inputs)
 			for i in range(4):		
 				if i >= 2:
 					inputs[i] = inputs[i].strip("[]\n'").split("', '")
@@ -132,6 +132,7 @@ class scenario:
 		generateRoute(carsA, carsB)
 
 
+
 		laneA_after_change = []
 		laneB_after_change = []
 		carsA_after = []
@@ -144,7 +145,7 @@ class scenario:
 		elif lane_change_alg.lower() == 'nowaiting':
 			laneA_after_change, laneB_after_change, changing_num, carsA_after, carsB_after = noWaitingLaneChange(carsA, carsB, self.lane_change_point, self.normal_speed, self.time_gap)
 		elif lane_change_alg.lower() == 'random':
-			laneA_after_change, laneB_after_change, changing_num, carsA_after, carsB_after = randomLaneChange(carsA, carsB)    # the order on laneA/laneB after lane-change point
+			laneA_after_change, laneB_after_change, changing_num, carsA_after, carsB_after = randomLaneChange(carsA, carsB)   
 		else:
 			print('lane_change_alg invalid')
 			sys.exit()
@@ -180,41 +181,36 @@ class scenario:
 		#### functional variable ####
 		last_passing_step = -1000
 		last_passing_lane = 'A'
-		last_laneA_id = ['N'] # 'N' means empty
+		last_laneA_id = ['N'] 		# 'N' means empty
 		last_laneB_id = ['N']
 		tail_has_stop = True
 		last_laneA_c = ['N']
 		last_laneB_c = ['N']
 		tail_has_stop_c = True
-		front_car_laneA = defaultdict(lambda: 'N')   # save the front car of a car in laneA after lane change
-		#print(laneA_after_change)
+		front_car_laneA = defaultdict(lambda: 'N')   	# save the front car of a car in laneA after lane change
+		last_detA = 'N'
+		last_detB = 'N'
+		merging_count = 0
+		changing_count = 0
 
 
 
 		#### start stimulation ####
 		step = 0
-		#print(start_arg)
 		traci.start(start_arg)
 
 		for i, car in enumerate(laneA_after_change):
 			if car[0] == 'B':
 				#print(car)
-				traci.vehicle.setRouteID(car, 'rB_c')	# change route of cars in laneB that will lane-change
+				traci.vehicle.setRouteID(car, 'rB_c')		# change route of cars in laneB that will lane-change
 			if i+1 < len(laneA_after_change):
 				front_car_laneA[car] = laneA_after_change[i+1]
-		last_detA = 'N'
-		last_detB = 'N'
-		car_done = defaultdict(lambda: False) #cars that pass the merging point
-		#print(merging_num, changing_num)
-		merging_count = 0
-		changing_count = 0
-		#print(f'lane_change_alg: {lane_change_alg}')
-		#print(f'lane_merge_alg: {lane_merge_alg}')
+		
+		car_done = defaultdict(lambda: False) 		#cars that pass the merging point
 		
 		while step < 10000000:
 
 			step += 1
-			#print('step: ', step)
 			traci.simulationStep()
 	
 			if merging_count == merging_num:
@@ -225,23 +221,21 @@ class scenario:
 			laneA_c = list(traci.edge.getLastStepVehicleIDs('E0_A'))
 			laneB_c = list(traci.edge.getLastStepVehicleIDs('E0_B'))
 
-			if len(laneA_id) == 0: # 'N' means empty
+			if len(laneA_id) == 0: 		# 'N' means empty
 				laneA_id.append('N')
 			if len(laneB_id) == 0:
 				laneB_id.append('N')
-			if len(laneA_c) == 0: # 'N' means empty
+			if len(laneA_c) == 0: 		# 'N' means empty
 				laneA_c.append('N')
 			if len(laneB_c) == 0:
 				laneB_c.append('N')
-			#print('laneA_id = ', laneA_id)
-			#print('laneB_id = ', laneB_id)
 
 			#change_lane(self.safe_dis, laneA_c, laneB_c, laneA_id, self.lane_change_point, self.step_error)
 			tail_has_stop_c, changing_count = change_lane_order(self.safe_dis, front_car_laneA, car_done, laneA_c, laneB_c, laneA_after_change, 
 				last_laneA_c, last_laneB_c, tail_has_stop_c, laneA_id, changing_count, changing_num, self.normal_speed)
 
 			last_passing_step, last_passing_lane, tail_has_stop, merging_count = lane_merge(step=step, 
-				passing_order=passing_order,   # a pass first, and then a, and then b, ...
+				passing_order=passing_order,  
 				W_equal=self.W_equal, 
 				W_plus=self.W_plus, 
 				last_passing_step=last_passing_step, 
@@ -257,7 +251,7 @@ class scenario:
 	
 			detB = list(traci.inductionloop.getLastStepVehicleIDs('detB'))
 			detA = list(traci.inductionloop.getLastStepVehicleIDs('detA'))
-			if len(detB) == 0: # 'N' means empty
+			if len(detB) == 0: 		# 'N' means empty
 				detB.append('N')
 			if len(detA) == 0:
 				detA.append('N')
