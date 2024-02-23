@@ -1,10 +1,10 @@
-/function/input.txt
+/Sumo/input.txt
 
-/function/outA.xml
-/function/outB.xml
+/Sumo/outA.xml
+/Sumo/outB.xml
 
-/function/output.csv
+/Sumo/output.csv
 
-/function/rou3.rou.xml
+/Sumo/rou3.rou.xml
 
 __pycache__
