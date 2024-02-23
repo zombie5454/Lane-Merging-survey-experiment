@@ -1,8 +1,10 @@
-function/input.txt
+/function/input.txt
 
-function/outA.xml
-function/outB.xml
+/function/outA.xml
+/function/outB.xml
 
-function/output.csv
+/function/output.csv
 
-function/rou3.rou.xml
+/function/rou3.rou.xml
+
+__pycache__
