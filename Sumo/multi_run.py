@@ -2,6 +2,7 @@ from function.scenario import scenario
 
 # 這支程式會跑多次simulation, 然後將結果統計到output.csv裡
 # 統計在不同W_plus的大小, 搭配不同演算法產生的結果
+# 這支程式需要跑大約3分鐘
 
 def run3(tot, s):
 	tot[0] += s.run(arg=['', 'new'])
@@ -33,8 +34,7 @@ for i in range(11):
 	tot = [0, 0, 0]
 	for j in range(3):
 		run3(tot, s)
-		print('.', end = ' ')
-	print('\t', end='')
+	print('.')
 	f.write(f'{W_equal}_{W_plus},')
 	tot = list(map(lambda i: str(i/10), tot))	
 	f.write(','.join(tot))
