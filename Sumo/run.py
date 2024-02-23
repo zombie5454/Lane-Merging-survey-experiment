@@ -1,4 +1,12 @@
 from function.scenario import scenario 
+import sys
+
+######### 此程式用來簡單示範如何跑一次simulation ###########
 
 s = scenario()
-s.run(arg=['', '--c', 'all'])
+s.set_printSteps() 					# print出simulation所花的step數
+
+
+### argument可以用argv的方式傳，也可以直接修改程式碼 ###
+s.run(arg=sys.argv)					
+#s.run(arg=['', --c', 'all'])			
