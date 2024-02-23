@@ -7,6 +7,8 @@ class car:
 	def printCar(self):
 		print(f'car: id:{self.id}, departTime:{self.departTime}, passChangeTime:{self.passChangeTime}')
 
+
+
 def printCars(cars):
 	for car in cars:
 		car.printCar()

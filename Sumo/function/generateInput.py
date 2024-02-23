@@ -16,6 +16,8 @@ def randomDepartTime(numA = 4, numB = 4, mingap = 1, maxgap = 7):
 
 	return departTimeA, departTimeB
 
+
+
 def randomCar(departTimeA, departTimeB):
 	carsA = []
 	carsB = []
@@ -25,6 +27,8 @@ def randomCar(departTimeA, departTimeB):
 		carsB.append(car('B'+str(i), departTimeB[i]))
 
 	return carsA, carsB, len(carsA)+len(carsB)
+
+
 
 def generateRoute(carsA, carsB):
 	f_route = open('rou3.rou.xml', 'w')

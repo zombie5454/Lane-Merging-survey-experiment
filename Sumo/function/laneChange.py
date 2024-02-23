@@ -37,6 +37,8 @@ def randomLaneChange(carsA, carsB):
 		
 	return carsA_after_laneChange, carsB_after_laneChange, len(carsB) - len(carsB_after_laneChange), carsA_after, carsB_after
 
+
+
 def noLaneChange(carsA, carsB, lane_change_point, normal_speed):
 	carsA_after_laneChange = []
 	carsB_after_laneChange = []
@@ -53,6 +55,8 @@ def noLaneChange(carsA, carsB, lane_change_point, normal_speed):
 
 	return carsA_after_laneChange, carsB_after_laneChange, 0, carsA_after, carsB_after
 
+
+
 def allLaneChange(carsA, carsB, lane_change_point, normal_speed):
 	cars = carsA + carsB
 	cars.sort(key=lambda x: x.departTime, reverse=True)
@@ -66,6 +70,8 @@ def allLaneChange(carsA, carsB, lane_change_point, normal_speed):
 		carsA_after.append(car)
 
 	return carsA_after_laneChange, carsB_after_laneChange, len(carsB), carsA_after, carsB_after
+
+
 
 def noWaitingLaneChange(carsA, carsB, lane_change_point, normal_speed, time_gap = 1):       
 	cars = carsA + carsB

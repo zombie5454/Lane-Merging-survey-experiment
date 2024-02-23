@@ -1,4 +1,5 @@
 from function.car import car, printCars
+import random
 
 def randomPassingOrder(carsA_after, carsB_after):
 	a = 0
@@ -21,6 +22,7 @@ def randomPassingOrder(carsA_after, carsB_after):
 				passingOrder.append(carsA_after[a].id)
 				a += 1
 	return passingOrder
+
 
 
 def FIFO(carsA_after, carsB_after):
