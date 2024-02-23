@@ -1,8 +1,8 @@
-input.txt
+./input.txt
 
-outA.xml
-outB.xml
+./outA.xml
+./outB.xml
 
-output.csv
+./output.csv
 
-rou3.rou.xml
+./rou3.rou.xml
