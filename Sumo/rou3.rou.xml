@@ -4,27 +4,63 @@
 	<route id="rB" edges="E-1_B E0_B E1_B E2"/>
 	<route id="rB_c" edges="E-1_B E0_B E1_A E2"/>
 	<vehicle id="A0" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
-		<stop lane="E-1_A_0" endPos="-1" until="9"/>
+		<stop lane="E-1_A_0" endPos="-1" until="7.0"/>
 	</vehicle>
 	<vehicle id="A1" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
-		<stop lane="E-1_A_0" endPos="-1" until="13"/>
+		<stop lane="E-1_A_0" endPos="-1" until="11.0"/>
 	</vehicle>
 	<vehicle id="A2" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
-		<stop lane="E-1_A_0" endPos="-1" until="20"/>
+		<stop lane="E-1_A_0" endPos="-1" until="16.0"/>
 	</vehicle>
 	<vehicle id="A3" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
-		<stop lane="E-1_A_0" endPos="-1" until="26"/>
+		<stop lane="E-1_A_0" endPos="-1" until="23.0"/>
+	</vehicle>
+	<vehicle id="A4" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
+		<stop lane="E-1_A_0" endPos="-1" until="25.0"/>
+	</vehicle>
+	<vehicle id="A5" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
+		<stop lane="E-1_A_0" endPos="-1" until="30.0"/>
+	</vehicle>
+	<vehicle id="A6" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
+		<stop lane="E-1_A_0" endPos="-1" until="36.0"/>
+	</vehicle>
+	<vehicle id="A7" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
+		<stop lane="E-1_A_0" endPos="-1" until="43.0"/>
+	</vehicle>
+	<vehicle id="A8" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
+		<stop lane="E-1_A_0" endPos="-1" until="46.0"/>
+	</vehicle>
+	<vehicle id="A9" color="0,1,1" depart="0" route="rA" type = "car" departPos="47">
+		<stop lane="E-1_A_0" endPos="-1" until="51.0"/>
 	</vehicle>
 	<vehicle id="B0" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
-		<stop lane="E-1_B_0" endPos="-1" until="7"/>
+		<stop lane="E-1_B_0" endPos="-1" until="2.0"/>
 	</vehicle>
 	<vehicle id="B1" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
-		<stop lane="E-1_B_0" endPos="-1" until="10"/>
+		<stop lane="E-1_B_0" endPos="-1" until="8.0"/>
 	</vehicle>
 	<vehicle id="B2" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
-		<stop lane="E-1_B_0" endPos="-1" until="16"/>
+		<stop lane="E-1_B_0" endPos="-1" until="13.0"/>
 	</vehicle>
 	<vehicle id="B3" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
-		<stop lane="E-1_B_0" endPos="-1" until="19"/>
+		<stop lane="E-1_B_0" endPos="-1" until="16.0"/>
+	</vehicle>
+	<vehicle id="B4" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
+		<stop lane="E-1_B_0" endPos="-1" until="20.0"/>
+	</vehicle>
+	<vehicle id="B5" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
+		<stop lane="E-1_B_0" endPos="-1" until="25.0"/>
+	</vehicle>
+	<vehicle id="B6" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
+		<stop lane="E-1_B_0" endPos="-1" until="31.0"/>
+	</vehicle>
+	<vehicle id="B7" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
+		<stop lane="E-1_B_0" endPos="-1" until="38.0"/>
+	</vehicle>
+	<vehicle id="B8" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
+		<stop lane="E-1_B_0" endPos="-1" until="45.0"/>
+	</vehicle>
+	<vehicle id="B9" color="1,0,0" depart="0" route="rB" type = "car" departPos="47">
+		<stop lane="E-1_B_0" endPos="-1" until="51.0"/>
 	</vehicle>
 </routes>
