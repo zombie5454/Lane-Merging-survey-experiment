@@ -18,6 +18,8 @@ from function.action import lane_merge, change_lane_order, slow_down
 #		--m [lane-merging演算法],  lane-merging演算法有: fifo(default), random
 #		--step-length [n] or --sl [n], 數字介於[0.001 and 1.0]，表示一個step代表實際幾秒, default: 0.1
 # 		new, 代表需要新的data
+#		gui, 代表會呼叫set_gui()
+#		show，代表會呼叫set_printSteps()
 # 6.重要的varibale的初始值和default值都在__init__()裡
 # 7.input.txt會儲存上一次跑的simulation的input
 
@@ -42,6 +44,7 @@ class scenario:
 		self.lane_merge_alg = 'FIFO'
 		self.new_data = False
 		self.printSteps = False
+		self.gui = False
 
 
 		# variable
@@ -66,10 +69,10 @@ class scenario:
 		self.printSteps = False	
 
 	def set_gui(self):
-		self.start_arg[0] = "sumo-gui"
+		self.gui = True
 
 	def unset_gui(self):
-		self.start_arg[0] = "sumo"
+		self.gui = False
 
 	def set_W_equal(self, w):
 		self.W_equal = w
@@ -93,6 +96,7 @@ class scenario:
 		lane_change_alg = self.lane_change_alg
 		lane_merge_alg = self.lane_merge_alg
 		new_data = self.new_data
+
 		for i in range(1, len(arg)):
 			if arg[i] == '--step-length' or arg[i] == '--sl':
 				step_length = arg[i+1]
@@ -102,12 +106,17 @@ class scenario:
 				lane_merge_alg = arg[i+1]
 			if arg[i] == 'new':
 				new_data = True
+			if arg[i] == 'gui':
+				self.set_gui()
+			if arg[i] == 'show':
+				self.set_printSteps()
 
 		start_arg.append('--step-length')
 		start_arg.append(str(step_length))
 		start_arg.append('--no-step-log')
 	
-
+		if self.gui:
+			start_arg[0] = 'sumo-gui'
 	
 		departTimeA = []
 		departTimeB = []
