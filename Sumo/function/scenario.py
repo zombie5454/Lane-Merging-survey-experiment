@@ -6,6 +6,7 @@ from function.generateInput import randomDepartTime, randomCar, generateRoute
 from function.laneChange import randomLaneChange, noLaneChange, allLaneChange, noWaitingLaneChange
 from function.passingOrder import randomPassingOrder, FIFO
 from function.action import lane_merge, change_lane_order, slow_down
+import pickle
 
 ### scenario是用來模擬整體架構的class，其中的run()可以用來跑一次simulation ###
 
@@ -124,18 +125,12 @@ class scenario:
 			departTimeA, departTimeB = randomDepartTime(mingap = self.time_gap, numA=self.numA, numB=self.numB)	
 			
 		else:		
-			f = open('input.txt', 'r')
-			inputs = f.readlines()
-			f.close()
-			for i in range(4):		
-				if i >= 2:
-					inputs[i] = inputs[i].strip("[]\n'").split("', '")
-				if i < 2:
-					inputs[i] = inputs[i].strip('[]\n').split(',')
-					inputs[i] = list(map(float, inputs[i]))
-			departTimeA = inputs[0]
-			departTimeB = inputs[1]	
-
+			# read last simulation's input from input.pickle
+			with open('input.pickle', 'rb') as f:
+				inputs = pickle.load(f)
+				departTimeA = inputs['departTimeA']
+				departTimeB = inputs['departTimeB']	
+			
 
 		carsA, carsB, merging_num = randomCar(departTimeA, departTimeB)
 		generateRoute(carsA, carsB)
@@ -172,18 +167,22 @@ class scenario:
 	
 
 
-		# write this simulation's input
-		inputs = [0] * 4
-		inputs[0] = departTimeA
-		inputs[1] = departTimeB
-		inputs[2] = laneA_after_change
-		inputs[3] = passing_order
-		f = open('input.txt', 'w')
-		for i in range(4):
-			f.write(str(inputs[i]))
-			f.write('\n')
-		f.write('# depart timeA\n# depart timeB\n# laneA_after_change\n# passing_order\n')
-		f.close()
+		# write this simulation's input to input.txt
+		inputs = {}
+		inputs['departTimeA'] = departTimeA
+		inputs['departTimeB'] = departTimeB
+		inputs['laneA_after_change'] = laneA_after_change
+		inputs['passing_order'] = passing_order
+		with open('input.txt', 'w') as f:
+			f.write(str(inputs['departTimeA']) + '\n')
+			f.write(str(inputs['departTimeB']) + '\n')
+			f.write(str(inputs['laneA_after_change']) + '\n')
+			f.write(str(inputs['passing_order']) + '\n')
+			f.write('# depart timeA\n# depart timeB\n# laneA_after_change\n# passing_order\n')
+
+		# write this simulation's input to input.pickle
+		with open("input.pickle", "wb") as f:
+			pickle.dump(inputs, f)
 	
 
 
