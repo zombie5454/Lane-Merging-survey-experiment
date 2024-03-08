@@ -8,3 +8,5 @@
 /Sumo/rou3.rou.xml
 
 __pycache__
+
+/Sumo/input.pickle
