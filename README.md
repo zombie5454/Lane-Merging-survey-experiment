@@ -4,3 +4,5 @@ An on-ramp or work-zone event may severely slow the traffic, so finding a strate
 * More details can be found in the report ``Survey_and_Experiment__Lane_Merging.pdf``.
 * The source code used in the experiment can be found in ``/Sumo``.
 
+![stimulation](screenshot.png)
+
