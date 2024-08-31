@@ -11,3 +11,7 @@
 - `--gui`, 代表會顯示GUI
 - `--show-input`，代表會顯示此次input
 - input.txt會儲存上一次跑的simulation的input
+
+### TODO
+- multi_run.py需要修改
+- lane changin演算法中的random還有bug
