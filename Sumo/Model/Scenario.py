@@ -107,8 +107,8 @@ class Scenario:
 			self.start_arg[0] = 'sumo-gui'
 	
 		#### set Cars ####
-		departTimeA = []
-		departTimeB = []
+		departTimeA: list[int] = []
+		departTimeB: list[int] = []
 		if self.new_data:
 			departTimeA, departTimeB = randomDepartTime(mingap = self.time_gap, numA=self.numA, numB=self.numB)	
 			
@@ -119,6 +119,8 @@ class Scenario:
 				departTimeA = inputs['departTimeA']
 				departTimeB = inputs['departTimeB']	
 			
+		carsA: list[Car] = []
+		carsB: list[Car] = []
 		carsA, carsB, merging_num = randomCar(departTimeA, departTimeB)
 		generateRoute(carsA, carsB)
 
@@ -181,7 +183,7 @@ class Scenario:
 		last_laneA_c = ['N']
 		last_laneB_c = ['N']
 		tail_has_stop_c = True
-		front_car_laneA = defaultdict(lambda: 'N')   	# save the front car of a car in laneA after lane change
+		front_car_laneA: dict[str, str] = defaultdict(lambda: 'N')   	# save the front car of a car in laneA after lane change
 		last_detA = 'N'
 		last_detB = 'N'
 		merging_count = 0
@@ -200,7 +202,7 @@ class Scenario:
 			if i+1 < len(laneChange.laneA_after_change):
 				front_car_laneA[car] = laneChange.laneA_after_change[i+1]
 		
-		car_done = defaultdict(lambda: False) 		#cars that pass the merging point
+		car_done: dict[str, bool] = defaultdict(lambda: False) 		#cars that pass the merging point
 		
 		while step < 10000000:
 
@@ -225,23 +227,34 @@ class Scenario:
 				laneB_c.append('N')
 
 			#change_lane(self.safe_dis, laneA_c, laneB_c, laneA_id, self.lane_change_point, self.step_error)
-			tail_has_stop_c, changing_count = change_lane_order(self.safe_dis, front_car_laneA, car_done, laneA_c, laneB_c, laneChange.laneA_after_change, 
-				last_laneA_c, last_laneB_c, tail_has_stop_c, laneA_id, changing_count, laneChange.changing_num, self.normal_speed)
+			tail_has_stop_c, changing_count = change_lane_order(self.safe_dis,
+				front_car_laneA,
+				car_done,
+				laneA_c,
+				laneB_c,
+				laneChange.laneA_after_change, 
+				last_laneA_c,
+				last_laneB_c,
+				tail_has_stop_c,
+				laneA_id,
+				changing_count,
+				laneChange.changing_num,
+				self.normal_speed)
 
-			last_passing_step, last_passing_lane, tail_has_stop, merging_count = lane_merge(step=step, 
-				passing_order=lane_merging.passing_order,  
-				W_equal=self.W_equal, 
-				W_plus=self.W_plus, 
-				last_passing_step=last_passing_step, 
-				last_passing_lane=last_passing_lane, 
-				last_laneA_id=last_laneA_id, 
-				last_laneB_id=last_laneB_id, 
-				tail_has_stop=tail_has_stop,
-				laneA_id=laneA_id,
-				laneB_id=laneB_id, 
-				car_done=car_done,
-				merging_count=merging_count,
-				merging_num=merging_num)
+			last_passing_step, last_passing_lane, tail_has_stop, merging_count = lane_merge(step, 
+				lane_merging.passing_order,  
+				self.W_equal, 
+				self.W_plus, 
+				last_passing_step, 
+				last_passing_lane, 
+				last_laneA_id, 
+				last_laneB_id, 
+				tail_has_stop,
+				laneA_id,
+				laneB_id, 
+				car_done,
+				merging_count,
+				merging_num)
 	
 			detB = list(traci.inductionloop.getLastStepVehicleIDs('detB'))
 			detA = list(traci.inductionloop.getLastStepVehicleIDs('detA'))

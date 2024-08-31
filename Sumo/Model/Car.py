@@ -1,6 +1,6 @@
 class Car:
 	def __init__(self, id, departTime):
-		self.id = id
+		self.id: str = id
 		self.departTime = departTime
 		self.passChangeTime = -1
 

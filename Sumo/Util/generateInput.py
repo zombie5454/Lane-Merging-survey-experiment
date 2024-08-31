@@ -2,8 +2,8 @@ from Model.Car import Car
 import random
 
 def randomDepartTime(numA = 4, numB = 4, mingap = 1, maxgap = 7):
-	departTimeA = []	
-	departTimeB = []
+	departTimeA: list[int] = []	
+	departTimeB: list[int] = []
 	departTimeA.append(random.randint(mingap, maxgap))
 	departTimeB.append(random.randint(mingap, maxgap))
 	for i in range(numA-1):
@@ -19,8 +19,8 @@ def randomDepartTime(numA = 4, numB = 4, mingap = 1, maxgap = 7):
 
 
 def randomCar(departTimeA, departTimeB):
-	carsA = []
-	carsB = []
+	carsA: list[Car] = []
+	carsB: list[Car] = []
 	for i in range(len(departTimeA)):
 		carsA.append(Car('A'+str(i), departTimeA[i]))
 	for i in range(len(departTimeB)):

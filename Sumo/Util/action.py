@@ -1,17 +1,17 @@
 import traci
 
 def lane_merge(step, 
-	passing_order,  
+	passing_order: list[str],  
 	W_equal, 
 	W_plus, 
 	last_passing_step, 
 	last_passing_lane, 
-	last_laneA_id, 
-	last_laneB_id, 
+	last_laneA_id: list[str], 
+	last_laneB_id: list[str], 
 	tail_has_stop,
-	laneA_id, 
-	laneB_id,
-	car_done,
+	laneA_id: list[str], 
+	laneB_id: list[str],
+	car_done: dict[str, bool],
 	merging_count,
 	merging_num):
 
@@ -100,7 +100,19 @@ def change_lane(safe_dis, laneA_c, laneB_c, laneA_id, lane_change_point, step_er
 
 
 
-def change_lane_order(safe_dis, front_car_laneA, car_done, laneA_c, laneB_c, laneA_after_change, last_laneA_c, last_laneB_c, tail_has_stop_c, laneA_id, changing_count, changing_num, normal_speed):
+def change_lane_order(safe_dis, 
+	front_car_laneA: dict[str, str],
+	car_done: dict[str, bool],
+	laneA_c: list[str],
+	laneB_c: list[str],
+	laneA_after_change: list[str],
+	last_laneA_c: list[str],
+	last_laneB_c: list[str],
+	tail_has_stop_c,
+	laneA_id: list[str],
+	changing_count,
+	changing_num,
+	normal_speed):
 
 	#initially set stop
 	if len(laneA_after_change) == 0:
@@ -124,7 +136,7 @@ def change_lane_order(safe_dis, front_car_laneA, car_done, laneA_c, laneB_c, lan
 		tail_has_stop_c = False
 
 	front_dis = -100000
-	front_car = front_car_laneA[laneB_c[-1]]
+	front_car: str = front_car_laneA[laneB_c[-1]]
 	if car_done[front_car] or front_car == 'N':
 		front_dis = 10000000
 	elif traci.vehicle.getRoadID(front_car) == '':
@@ -158,8 +170,16 @@ def change_lane_order(safe_dis, front_car_laneA, car_done, laneA_c, laneB_c, lan
 	
 
 
-def slow_down(detA, detB, last_detA, last_detB, front_car_laneA, car_done, slow_speed, safe_dis):
-	front_car = front_car_laneA[detB[0]]
+def slow_down(detA: str,
+	detB: str,
+	last_detA: str,
+	last_detB: str,
+	front_car_laneA: dict[str, str],
+	car_done: dict[str, bool],
+	slow_speed,
+	safe_dis):
+
+	front_car: str = front_car_laneA[detB[0]]
 	front_dis = 1000000
 	if front_car != 'N' and car_done[front_car] == False:
 
@@ -174,7 +194,7 @@ def slow_down(detA, detB, last_detA, last_detB, front_car_laneA, car_done, slow_
 
 
 	
-	front_car = front_car_laneA[detA[0]]
+	front_car: str = front_car_laneA[detA[0]]
 	front_dis = 1000000
 	if front_car != 'N' and car_done[front_car] == False:
 		if traci.vehicle.getRoadID(front_car) == '' or traci.vehicle.getRoadID(front_car)[1] == '-':  	# roadID == '' means car doesn't existed yet

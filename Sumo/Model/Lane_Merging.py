@@ -1,11 +1,12 @@
 from Model.Car import Car
 import random
 
+# 此為lane merge演算法的class，如果要新增新的演算法，必須要提供(更新)__init__裡的成員變數。
 class Lane_Merging:
 	def __init__(self) -> None:
-		self.passing_order = []
+		self.passing_order: list[str] = []
 
-	def randomPassingOrder(self, carsA_after, carsB_after):
+	def randomPassingOrder(self, carsA_after: list[Car], carsB_after: list[Car]):
 		a = 0
 		b = 0
 		la = len(carsA_after)
@@ -27,8 +28,8 @@ class Lane_Merging:
 
 
 
-	def FIFO(self, carsA_after, carsB_after):
-		cars = carsA_after + carsB_after
+	def FIFO(self, carsA_after: list[Car], carsB_after: list[Car]):
+		cars: list[Car] = carsA_after + carsB_after
 		cars.sort(key=lambda x: x.departTime, reverse=True)
 		#printCars(cars)
 		for i in cars:

@@ -1,15 +1,16 @@
 from Model.Car import Car
 import random
 
+# 此為lane change演算法的class，如果要新增新的演算法，必須要提供(更新)__init__裡的成員變數。
 class Lane_Change:
     def __init__(self) -> None:
-        self.laneA_after_change = []
-        self.laneB_after_change = []
+        self.laneA_after_change: list[str] = []
+        self.laneB_after_change: list[str] = []
         self.changing_num = -1
-        self.carsA_after = []
-        self.carsB_after = []
+        self.carsA_after: list[Car] = []
+        self.carsB_after: list[Car] = []
 
-    def noLaneChange(self, carsA, carsB, lane_change_point, normal_speed):
+    def noLaneChange(self, carsA: list[Car], carsB: list[Car], lane_change_point, normal_speed):
         for i in range(len(carsA)-1, -1, -1):
             carsA[i].passChangeTime = lane_change_point / normal_speed + carsA[i].departTime
             self.laneA_after_change.append(carsA[i].id)
@@ -21,8 +22,8 @@ class Lane_Change:
 
         self.changing_num = 0
 
-    def allLaneChange(self, carsA, carsB, lane_change_point, normal_speed):
-        cars = carsA + carsB
+    def allLaneChange(self, carsA: list[Car], carsB: list[Car], lane_change_point, normal_speed):
+        cars: list[Car] = carsA + carsB
         cars.sort(key=lambda x: x.departTime, reverse=True)
         for car in cars:
             car.passChangeTime = lane_change_point / normal_speed + car.departTime
@@ -31,8 +32,8 @@ class Lane_Change:
 
         self.changing_num = len(carsB)
 
-    def noWaitingLaneChange(self, carsA, carsB, lane_change_point, normal_speed, time_gap = 1):
-        cars = carsA + carsB
+    def noWaitingLaneChange(self, carsA: list[Car], carsB: list[Car], lane_change_point, normal_speed, time_gap = 1):
+        cars: list[Car] = carsA + carsB
         cars.sort(key=lambda x: x.departTime, reverse=True)
         for i in range(len(cars)):
             if cars[i].id[0] == 'A':
@@ -57,7 +58,7 @@ class Lane_Change:
 
         self.changing_num = len(carsB)-len(self.laneB_after_change)
 
-    def randomLaneChange(self, carsA, carsB):
+    def randomLaneChange(self, carsA: list[Car], carsB: list[Car]):
         a = len(carsA)-1
         b = len(carsB)-1
         while a >= 0 or b >= 0:
