@@ -1,28 +1,16 @@
 import traci
 from collections import defaultdict, deque
 import sys
-from function.car import car, printCars
-from function.generateInput import randomDepartTime, randomCar, generateRoute
-from function.laneChange import randomLaneChange, noLaneChange, allLaneChange, noWaitingLaneChange
-from function.passingOrder import randomPassingOrder, FIFO
-from function.action import lane_merge, change_lane_order, slow_down
+from Model.Car import Car, printCars
+from Model.Lane_Change import Lane_Change
+from Model.Lane_Merging import Lane_Merging
+from Util.generateInput import randomDepartTime, randomCar, generateRoute
+from Util.action import lane_merge, change_lane_order, slow_down
+
 import pickle
 
-### scenario是用來模擬整體架構的class，其中的run()可以用來跑一次simulation ###
 
-# 1.可以透過set_gui()來讓simulation的過程呈現在內建的GUI上
-# 2.可以透過set_numA()和set_numB()來決定A, B車道上的車輛數
-# 3.可以透過set_printSteps()來讓print出simulation所花的step數
-# 4.在跑run()時，傳入的參數arg: List，請注意arg[0]是不會讀取到的，所以建議是用sys.argv傳入
-# 5.arg的option有: 
-#		--c [lane-changing演算法]，lane-changing演算法有: no(default), all, nowaiting, random
-#		--m [lane-merging演算法],  lane-merging演算法有: fifo(default), random
-#		--step-length [n] or --sl [n], 數字介於[0.001 and 1.0]，表示一個step代表實際幾秒, default: 0.1
-# 		new, 代表需要新的data
-#		gui, 代表會呼叫set_gui()
-#		show，代表會呼叫set_printSteps()
-# 6.重要的varibale的初始值和default值都在__init__()裡
-# 7.input.txt會儲存上一次跑的simulation的input
+### scenario是用來模擬整體架構的class，其中的run()可以用來跑一次simulation ###
 
 '''
 import os, sys
@@ -36,16 +24,17 @@ else:
 sys.path.append(os.path.join('c:', os.sep, 'whatever', 'path', 'to', 'sumo', 'tools'))
 '''
 
-class scenario:
+class Scenario:
 	def __init__(self):
 		# option, argv
-		self.step_length = 0.1		# sumo/sumo-gui use a time step of one second per default. You may override this using the --step-length <TIME> option. <TIME> is by giving a value in seconds between [0.001 and 1.0].
-		self.start_arg = ["sumo", "-c", "cfg.sumocfg"] 
+		self.step_length = '0.1'		# sumo/sumo-gui use a time step of one second per default. You may override this using the --step-length <TIME> option. <TIME> is by giving a value in seconds between [0.001 and 1.0].
+		self.start_arg = ["sumo", "-c", "Setup/cfg.sumocfg", '--step-length', '0.1', '--no-step-log'] 
 		self.lane_change_alg = 'No'
 		self.lane_merge_alg = 'FIFO'
 		self.new_data = False
-		self.printSteps = False
-		self.gui = False
+		self.printSteps = False		# print出simulation所花的step數
+		self.gui = False			# 來讓simulation的過程呈現在內建的GUI上
+		self.printInput = False		# print此次ipnut
 
 
 		# variable
@@ -87,41 +76,40 @@ class scenario:
 	def set_numB(self, n):
 		self.numB = n	
 
+	def set_step_length(self, step):
+		self.step_length = step
+
+	def set_lane_change_alg(self, name):
+		self.lane_change_alg = name
+
+	def set_lane_merge_alg(self, name):
+		self.lane_merge_alg = name
+
+	def set_new_data(self):
+		self.new_data = True
+
+	def unset_new_data(self):
+		self.new_data = False
+
+	def set_printInput(self):
+		self.printInput = True
+
+	def unset_printInput(self):
+		self.printInput = False
 
 
-	def run(self, arg):	
+	def run(self):	
 	
-		#### option, argv ####
-		step_length = self.step_length		# sumo/sumo-gui use a time step of one second per default. You may override this using the --step-length <TIME> option. <TIME> is by giving a value in seconds between [0.001 and 1.0].
-		start_arg = self.start_arg.copy()
-		lane_change_alg = self.lane_change_alg
-		lane_merge_alg = self.lane_merge_alg
-		new_data = self.new_data
+		#### set start_arg ####
+		self.start_arg[4] = self.step_length
 
-		for i in range(1, len(arg)):
-			if arg[i] == '--step-length' or arg[i] == '--sl':
-				step_length = arg[i+1]
-			if arg[i] == '--c':
-				lane_change_alg = arg[i+1]
-			if arg[i] == '--m':
-				lane_merge_alg = arg[i+1]
-			if arg[i] == 'new':
-				new_data = True
-			if arg[i] == 'gui':
-				self.set_gui()
-			if arg[i] == 'show':
-				self.set_printSteps()
-
-		start_arg.append('--step-length')
-		start_arg.append(str(step_length))
-		start_arg.append('--no-step-log')
-	
 		if self.gui:
-			start_arg[0] = 'sumo-gui'
+			self.start_arg[0] = 'sumo-gui'
 	
+		#### set Cars ####
 		departTimeA = []
 		departTimeB = []
-		if new_data:
+		if self.new_data:
 			departTimeA, departTimeB = randomDepartTime(mingap = self.time_gap, numA=self.numA, numB=self.numB)	
 			
 		else:		
@@ -131,48 +119,41 @@ class scenario:
 				departTimeA = inputs['departTimeA']
 				departTimeB = inputs['departTimeB']	
 			
-
 		carsA, carsB, merging_num = randomCar(departTimeA, departTimeB)
 		generateRoute(carsA, carsB)
 
-
-
-		laneA_after_change = []
-		laneB_after_change = []
-		carsA_after = []
-		carsB_after = []
-		changing_num = -1
-		if lane_change_alg.lower() == 'no':
-			laneA_after_change, laneB_after_change, changing_num, carsA_after, carsB_after = noLaneChange(carsA, carsB, self.lane_change_point, self.normal_speed)
-		elif lane_change_alg.lower() == 'all':
-			laneA_after_change, laneB_after_change, changing_num, carsA_after, carsB_after = allLaneChange(carsA, carsB, self.lane_change_point, self.normal_speed)
-		elif lane_change_alg.lower() == 'nowaiting':
-			laneA_after_change, laneB_after_change, changing_num, carsA_after, carsB_after = noWaitingLaneChange(carsA, carsB, self.lane_change_point, self.normal_speed, self.time_gap)
-		elif lane_change_alg.lower() == 'random':
-			laneA_after_change, laneB_after_change, changing_num, carsA_after, carsB_after = randomLaneChange(carsA, carsB)   
+		#### set laneChange ####
+		laneChange = Lane_Change()
+		if self.lane_change_alg.lower() == 'no':
+			laneChange.noLaneChange(carsA, carsB, self.lane_change_point, self.normal_speed)
+		elif self.lane_change_alg.lower() == 'all':
+			laneChange.allLaneChange(carsA, carsB, self.lane_change_point, self.normal_speed)
+		elif self.lane_change_alg.lower() == 'nowaiting':
+			laneChange.noWaitingLaneChange(carsA, carsB, self.lane_change_point, self.normal_speed, self.time_gap)
+		elif self.lane_change_alg.lower() == 'random':
+			laneChange.randomLaneChange(carsA, carsB)
 		else:
 			print('lane_change_alg invalid')
 			sys.exit()
-	
-	
 
-		passing_order = []
-		if lane_merge_alg.lower() == 'fifo':
-			passing_order = FIFO(carsA_after, carsB_after)
-		elif lane_merge_alg.lower() == 'random':
-			passing_order = randomPassingOrder(carsA_after, carsB_after)
+		#### set laneMering ####
+		lane_merging = Lane_Merging()
+		if self.lane_merge_alg.lower() == 'fifo':
+			lane_merging.FIFO(laneChange.carsA_after, laneChange.carsB_after)
+		elif self.lane_merge_alg.lower() == 'random':
+			lane_merging.randomPassingOrder(laneChange.carsA_after, laneChange.carsB_after)
 		else:
 			print('lane_merge_alg invalid')
 			sys.exit()
-	
 
+		#### write input ####
 
 		# write this simulation's input to input.txt
 		inputs = {}
 		inputs['departTimeA'] = departTimeA
 		inputs['departTimeB'] = departTimeB
-		inputs['laneA_after_change'] = laneA_after_change
-		inputs['passing_order'] = passing_order
+		inputs['laneA_after_change'] = laneChange.laneA_after_change
+		inputs['passing_order'] = lane_merging.passing_order
 		with open('input.txt', 'w') as f:
 			f.write(str(inputs['departTimeA']) + '\n')
 			f.write(str(inputs['departTimeB']) + '\n')
@@ -183,7 +164,12 @@ class scenario:
 		# write this simulation's input to input.pickle
 		with open("input.pickle", "wb") as f:
 			pickle.dump(inputs, f)
-	
+
+		if self.printInput:
+			print("depart timeA: ", departTimeA)
+			print("depart timeB: ", departTimeB)
+			print("laneA_after_change: ", laneChange.laneA_after_change)
+			print("passing_order: ", lane_merging.passing_order)
 
 
 		#### functional variable ####
@@ -205,14 +191,14 @@ class scenario:
 
 		#### start stimulation ####
 		step = 0
-		traci.start(start_arg)
+		traci.start(self.start_arg)
 
-		for i, car in enumerate(laneA_after_change):
+		for i, car in enumerate(laneChange.laneA_after_change):
 			if car[0] == 'B':
 				#print(car)
 				traci.vehicle.setRouteID(car, 'rB_c')		# change route of cars in laneB that will lane-change
-			if i+1 < len(laneA_after_change):
-				front_car_laneA[car] = laneA_after_change[i+1]
+			if i+1 < len(laneChange.laneA_after_change):
+				front_car_laneA[car] = laneChange.laneA_after_change[i+1]
 		
 		car_done = defaultdict(lambda: False) 		#cars that pass the merging point
 		
@@ -239,11 +225,11 @@ class scenario:
 				laneB_c.append('N')
 
 			#change_lane(self.safe_dis, laneA_c, laneB_c, laneA_id, self.lane_change_point, self.step_error)
-			tail_has_stop_c, changing_count = change_lane_order(self.safe_dis, front_car_laneA, car_done, laneA_c, laneB_c, laneA_after_change, 
-				last_laneA_c, last_laneB_c, tail_has_stop_c, laneA_id, changing_count, changing_num, self.normal_speed)
+			tail_has_stop_c, changing_count = change_lane_order(self.safe_dis, front_car_laneA, car_done, laneA_c, laneB_c, laneChange.laneA_after_change, 
+				last_laneA_c, last_laneB_c, tail_has_stop_c, laneA_id, changing_count, laneChange.changing_num, self.normal_speed)
 
 			last_passing_step, last_passing_lane, tail_has_stop, merging_count = lane_merge(step=step, 
-				passing_order=passing_order,  
+				passing_order=lane_merging.passing_order,  
 				W_equal=self.W_equal, 
 				W_plus=self.W_plus, 
 				last_passing_step=last_passing_step, 

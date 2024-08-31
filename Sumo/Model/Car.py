@@ -1,4 +1,4 @@
-class car:
+class Car:
 	def __init__(self, id, departTime):
 		self.id = id
 		self.departTime = departTime

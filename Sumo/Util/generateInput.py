@@ -1,4 +1,4 @@
-from function.car import car
+from Model.Car import Car
 import random
 
 def randomDepartTime(numA = 4, numB = 4, mingap = 1, maxgap = 7):
@@ -22,16 +22,16 @@ def randomCar(departTimeA, departTimeB):
 	carsA = []
 	carsB = []
 	for i in range(len(departTimeA)):
-		carsA.append(car('A'+str(i), departTimeA[i]))
+		carsA.append(Car('A'+str(i), departTimeA[i]))
 	for i in range(len(departTimeB)):
-		carsB.append(car('B'+str(i), departTimeB[i]))
+		carsB.append(Car('B'+str(i), departTimeB[i]))
 
 	return carsA, carsB, len(carsA)+len(carsB)
 
 
 
 def generateRoute(carsA, carsB):
-	f_route = open('rou3.rou.xml', 'w')
+	f_route = open('Setup/rou3.rou.xml', 'w')
 	f_route.write('<routes>\n')
 	f_route.write('\t<vType id="car" accel="5" decel="7" sigma="0" length="5" maxSpeed="14"/>\n')
 	f_route.write('\t<route id="rA" edges="E-1_A E0_A E1_A E2"/>\n')
